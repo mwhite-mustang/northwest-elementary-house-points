@@ -8,64 +8,39 @@
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050505;font-family:Arial,Helvetica,sans-serif}
 #stage{position:relative;width:100vw;height:100vh;background:#050505 url('house-scoreboard-background.png') center/contain no-repeat}
 .score{
- position:absolute; transform:translate(-50%,-50%);
- font-weight:1000; font-size:clamp(34px,5.8vw,92px); line-height:1;
- color:white; text-shadow:0 4px 0 rgba(0,0,0,.85),0 0 14px rgba(255,255,255,.55);
+ position:absolute;transform:translate(-50%,-50%);
+ width:17%;text-align:center;
+ font-weight:1000;font-size:clamp(42px,6.5vw,110px);line-height:1;
+ color:#fff;text-shadow:0 5px 0 rgba(0,0,0,.85),0 0 18px rgba(255,255,255,.45);
  font-variant-numeric:tabular-nums;
 }
-/* Centers of the six large numerals in the approved 1536x1024 artwork */
-#altruismo{left:23.2%;top:43.5%}
-#amistad{left:50.0%;top:43.5%}
-#reveur{left:76.7%;top:43.5%}
-#nukumori{left:23.2%;top:75.0%}
-#onraka{left:50.0%;top:75.0%}
-#protos{left:76.7%;top:75.0%}
-#status{
- position:absolute;right:1.2%;bottom:.8%;font-size:clamp(9px,.8vw,14px);
- color:rgba(255,255,255,.7);background:rgba(0,0,0,.55);padding:.35em .65em;border-radius:999px
-}
+#altruismo{left:18.8%;top:47.3%}
+#amistad{left:50.0%;top:47.3%}
+#reveur{left:81.2%;top:47.3%}
+#nukumori{left:18.8%;top:81.2%}
+#onraka{left:50.0%;top:81.2%}
+#protos{left:81.2%;top:81.2%}
+#status{position:absolute;right:1%;bottom:.6%;font-size:clamp(9px,.75vw,13px);color:rgba(255,255,255,.68);background:rgba(0,0,0,.5);padding:.35em .65em;border-radius:999px}
 </style>
 </head>
 <body>
 <div id="stage">
- <div class="score" id="altruismo">0</div>
- <div class="score" id="amistad">0</div>
- <div class="score" id="reveur">0</div>
- <div class="score" id="nukumori">0</div>
- <div class="score" id="onraka">0</div>
- <div class="score" id="protos">0</div>
- <div id="status">Connecting…</div>
+<div class="score" id="altruismo">0</div><div class="score" id="amistad">0</div><div class="score" id="reveur">0</div>
+<div class="score" id="nukumori">0</div><div class="score" id="onraka">0</div><div class="score" id="protos">0</div>
+<div id="status">Connecting…</div>
 </div>
 <script>
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTB0LVYIA07xj3L7UQj0hUZlinTTRbNGDS3VNo1gaDQwDWp3KaNEAbq3HWuyyxXDGgCgUDvNwAHPFf0/pub?gid=0&single=true&output=csv';
-const ids = {
-  "altruismo":"altruismo","amistad":"amistad","rêveur":"reveur","reveur":"reveur",
-  "nukumori":"nukumori","onraka":"onraka","protos":"protos"
-};
-function parseCSV(text) {
-  return text.trim().split(/\r?\n/).slice(1).map(line => {
-    const m=line.match(/^\s*"?([^",]+)"?\s*,\s*"?([^"]*)"?\s*$/);
-    return m ? [m[1].trim(),m[2].trim()] : null;
-  }).filter(Boolean);
+const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vTB0LVYIA07xj3L7UQj0hUZlinTTRbNGDS3VNo1gaDQwDWp3KaNEAbq3HWuyyxXDGgCgUDvNwAHPFf0/pub?gid=0&single=true&output=csv';
+const ids={"altruismo":"altruismo","amistad":"amistad","rêveur":"reveur","reveur":"reveur","nukumori":"nukumori","onraka":"onraka","protos":"protos"};
+function parseCSV(t){return t.trim().split(/\r?\n/).slice(1).map(l=>{let i=l.indexOf(',');if(i<0)return null;return [l.slice(0,i).replace(/^"|"$/g,'').trim(),l.slice(i+1).replace(/^"|"$/g,'').trim()]}).filter(Boolean)}
+async function refresh(){
+ try{
+  const r=await fetch(CSV_URL+"&_="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  parseCSV(await r.text()).forEach(([h,p])=>{const id=ids[h.toLowerCase()];if(id)document.getElementById(id).textContent=p||"0"});
+  document.getElementById("status").textContent="LIVE • "+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+ }catch(e){document.getElementById("status").textContent="Waiting for House Points…"}
 }
-async function refresh() {
- try {
-   const r=await fetch(CSV_URL + "&_=" + Date.now(), {cache:"no-store"});
-   if(!r.ok) throw new Error("HTTP "+r.status);
-   const rows=parseCSV(await r.text());
-   rows.forEach(([house,points])=>{
-      const key=house.toLowerCase();
-      const id=ids[key];
-      if(id) document.getElementById(id).textContent = points || "0";
-   });
-   document.getElementById("status").textContent="LIVE • updated "+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
- } catch(e) {
-   document.getElementById("status").textContent="Waiting for House Points…";
-   console.error(e);
- }
-}
-refresh();
-setInterval(refresh,15000);
+refresh();setInterval(refresh,15000);
 </script>
-</body>
-</html>
+</body></html>
