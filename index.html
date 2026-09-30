@@ -8,12 +8,23 @@
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Arial,Helvetica,sans-serif}
 #wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
 #stage{position:relative;aspect-ratio:16/9;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);
-background:url('house-scoreboard-v3.jpg') center center/100% 100% no-repeat}
-.score{position:absolute;transform:translate(-50%,-50%);width:17%;text-align:center;
-font-weight:900;font-size:clamp(42px,6.3vw,110px);line-height:1;color:#fff;
-text-shadow:0 5px 2px rgba(0,0,0,.95),0 0 16px rgba(255,255,255,.45);font-variant-numeric:tabular-nums}
-#altruismo{left:18.8%;top:47.19%} #amistad{left:50%;top:47.19%} #reveur{left:81.2%;top:47.19%}
-#nukumori{left:18.8%;top:81.65%} #onraka{left:50%;top:81.65%} #protos{left:81.2%;top:81.65%}
+background:url('house-scoreboard-v3.jpg') center/100% 100% no-repeat}
+.score{
+ position:absolute;transform:translate(-50%,-50%);
+ width:15%;height:12%;
+ display:flex;align-items:center;justify-content:center;
+ text-align:center;font-weight:900;
+ font-size:clamp(40px,5.5vw,94px);line-height:1;
+ color:#fff;text-shadow:0 5px 2px rgba(0,0,0,.95),0 0 14px rgba(255,255,255,.35);
+ font-variant-numeric:tabular-nums;
+}
+/* Tuned against the live 16:9 screenshot: centers of the six dark score windows */
+#altruismo{left:20.4%;top:46.4%}
+#amistad{left:50.0%;top:46.4%}
+#reveur{left:79.6%;top:46.4%}
+#nukumori{left:20.4%;top:82.2%}
+#onraka{left:50.0%;top:82.2%}
+#protos{left:79.6%;top:82.2%}
 #status{position:absolute;right:.8%;bottom:.4%;font-size:11px;color:#bbb;background:#000a;padding:4px 8px;border-radius:10px}
 </style></head>
 <body><div id="wrap"><div id="stage">
